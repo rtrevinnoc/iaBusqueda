@@ -11,8 +11,8 @@ class Experiment:
         self.currentStep = 1
         self.increment = 1
 
-        self.timesPerStepBFS = []
-        self.avgTimesPerStepBFS = []
+        self.timesPerStepDFS = []
+        self.avgTimesPerStepDFS = []
 
         self.timesPerStepAStar = []
         self.avgTimesPerStepAStar = []
@@ -38,7 +38,7 @@ class Experiment:
 
         print("\n\n# STEP TIMES:", times, "AVG: " + str(avgTime) + " s")
 
-    def runStepBFS(self, step):
+    def runStepDFS(self, step):
         print("\n# STEP " + str(self.currentStep))
         times = []
         for x in range(self.trials):
@@ -46,7 +46,7 @@ class Experiment:
 
             # TODO: Insertar codigo
             ex = Knapsack(step)
-            bestKnapsack = ex.solveBFS()
+            bestKnapsack = ex.solveDFS()
             print(ex.calculateError(bestKnapsack), ex.knapsackWeight(bestKnapsack), ex.knapsackProfit(bestKnapsack), bestKnapsack)
 
             end = time.time()
@@ -54,8 +54,8 @@ class Experiment:
             times.append(currentTime)
             print("\n# TRIAL " + str(x) + " took " + str(currentTime) + " s")
         avgTime = sum(times) / len(times)
-        self.timesPerStepBFS.append(times)
-        self.avgTimesPerStepBFS.append(avgTime)
+        self.timesPerStepDFS.append(times)
+        self.avgTimesPerStepDFS.append(avgTime)
 
         print("\n\n# STEP TIMES:", times, "AVG: " + str(avgTime) + " s")
 
@@ -64,7 +64,7 @@ class Experiment:
         self.steps = steps
         for step in steps:
             self.runStepAStar(step)
-            self.runStepBFS(step)
+            self.runStepDFS(step)
             self.currentStep += 1
 
     def plot(self):
@@ -84,7 +84,7 @@ class Experiment:
         # plt.show()
 
         plt.plot([step.split("/")[1] for step in self.steps], self.avgTimesPerStepAStar, label="Busqueda A*")
-        plt.plot([step.split("/")[1] for step in self.steps], self.avgTimesPerStepBFS, label="Busqueda por Amplitud")
+        plt.plot([step.split("/")[1] for step in self.steps], self.avgTimesPerStepDFS, label="Busqueda por Profundidad")
 
         plt.xlabel("Problema")
         plt.ylabel("Tiempo de Ejecucion Promedio (s)")
@@ -140,7 +140,7 @@ class Knapsack:
     def calculateError(self, knapsack) -> float:
         return (self.knapsackProfit(knapsack) / self.optimum) * 100
 
-    def solveBFS(self) -> list:
+    def solveDFS(self) -> list:
         pool = tuple(self.items)
         n = len(pool)
         knapsacks = []
